@@ -1,27 +1,50 @@
-import { Routes, Route } from 'react-router-dom';
-import Layout from './components/layout/Layout';
-import HomePage from './pages/HomePage';
-import DashboardPage from './pages/DashboardPage';
-import AssetsPage from './pages/AssetsPage';
-import HistoryPage from './pages/HistoryPage';
-import NotFoundPage from './pages/NotFoundPage';
-import { useTheme } from './context/ThemeContext';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { EthersProvider } from './contexts/EthersContext';
+import { CropProvider } from './contexts/CropContext';
+
+// Pages
+import Home from './pages/Home';
+import FarmerDashboard from './pages/FarmerDashboard';
+import BuyerDashboard from './pages/BuyerDashboard';
+import CropDetails from './pages/CropDetails';
+import NotFound from './pages/NotFound';
+
+// Components
+import Layout from './components/Layout';
+import RequireAuth from './components/RequireAuth';
 
 function App() {
-  const { theme } = useTheme();
-  
   return (
-    <div className={theme}>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="assets" element={<AssetsPage />} />
-          <Route path="history" element={<HistoryPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
-      </Routes>
-    </div>
+    <Router>
+      <EthersProvider>
+        <CropProvider>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route 
+                path="/farmer" 
+                element={
+                  <RequireAuth>
+                    <FarmerDashboard />
+                  </RequireAuth>
+                } 
+              />
+              <Route 
+                path="/buyer" 
+                element={
+                  <RequireAuth>
+                    <BuyerDashboard />
+                  </RequireAuth>
+                } 
+              />
+              <Route path="/crop/:id" element={<CropDetails />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </CropProvider>
+      </EthersProvider>
+    </Router>
   );
 }
 
