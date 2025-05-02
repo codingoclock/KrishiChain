@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/prakhar/Desktop/SuperNova Project/KrishiChain/Smart-contracts/contracts/KrishiChain.sol": {
+      "lastModificationDate": 1746170131710,
+      "contentHash": "e20d5d0fb499b06ec88da17a82a7bc6e",
+      "sourceName": "contracts/KrishiChain.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "KrishiChain"
+      ]
+    }
+  }
+}
