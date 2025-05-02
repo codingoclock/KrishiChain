@@ -1,70 +1,58 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { ethers } from 'ethers';
-import { Web3Provider as EthersWeb3Provider } from '@ethersproject/providers';
-
-declare global {
-    interface Window {
-        ethereum: any;
-    }
-}
+import React, { createContext, useContext, useState } from 'react';
 
 interface Web3ContextType {
-    account: string | null;
-    provider: EthersWeb3Provider | null;
-    connect: () => Promise<void>;
-    disconnect: () => void;
+  isConnected: boolean;
+  address: string | null;
+  balance: string;
+  connectWallet: () => void;
+  disconnectWallet: () => void;
 }
 
 const Web3Context = createContext<Web3ContextType>({
-    account: null,
-    provider: null,
-    connect: async () => {},
-    disconnect: () => {},
+  isConnected: false,
+  address: null,
+  balance: '0',
+  connectWallet: () => {},
+  disconnectWallet: () => {},
 });
 
 export const useWeb3 = () => useContext(Web3Context);
 
 export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [account, setAccount] = useState<string | null>(null);
-    const [provider, setProvider] = useState<EthersWeb3Provider | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [address, setAddress] = useState<string | null>(null);
+  const [balance, setBalance] = useState('0');
 
-    const connect = async () => {
-        if (typeof window.ethereum !== 'undefined') {
-            try {
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                await provider.send('eth_requestAccounts', []);
-                const signer = provider.getSigner();
-                const account = await signer.getAddress();
-                setAccount(account);
-                setProvider(provider);
-            } catch (error) {
-                console.error('Error connecting to MetaMask:', error);
-            }
-        } else {
-            alert('Please install MetaMask to use this application');
-        }
-    };
+  // Mock wallet connection - to be replaced with real web3 integration
+  const connectWallet = () => {
+    // This is a placeholder for actual Web3 wallet connection
+    // You will implement the real connection logic
+    const mockAddress = '0x' + Math.random().toString(16).substring(2, 12) + '...';
+    const mockBalance = (Math.random() * 10).toFixed(4);
+    
+    setIsConnected(true);
+    setAddress(mockAddress);
+    setBalance(mockBalance);
+  };
 
-    const disconnect = () => {
-        setAccount(null);
-        setProvider(null);
-    };
+  const disconnectWallet = () => {
+    // This is a placeholder for actual Web3 wallet disconnection
+    setIsConnected(false);
+    setAddress(null);
+    setBalance('0');
+  };
 
-    useEffect(() => {
-        if (typeof window.ethereum !== 'undefined') {
-            window.ethereum.on('accountsChanged', (accounts: string[]) => {
-                if (accounts.length === 0) {
-                    disconnect();
-                } else {
-                    setAccount(accounts[0]);
-                }
-            });
-        }
-    }, []);
-
-    return (
-        <Web3Context.Provider value={{ account, provider, connect, disconnect }}>
-            {children}
-        </Web3Context.Provider>
-    );
-}; 
+  return (
+    <Web3Context.Provider
+      value={{
+        isConnected,
+        address,
+        balance,
+        connectWallet,
+        disconnectWallet,
+      }}
+    >
+      {children}
+    </Web3Context.Provider>
+  );
+};
